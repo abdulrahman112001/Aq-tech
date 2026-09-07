@@ -3,13 +3,14 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useLanguage } from "@/context/LanguageContext"
-import { projects, Project } from "@/data/projects"
+import { projects, projectCategories } from "@/data/projects"
 import { fadeInUp, staggerContainer, viewportOnce } from "./animations"
+import Icon from "./Icon"
 
-const categories: Array<Project["category"] | "All"> = ["All", "Web", "Mobile", "AI", "Cloud"]
+const categories = ["All", ...projectCategories]
 
 export default function Portfolio() {
-  const { t } = useLanguage()
+  const { t, isRTL } = useLanguage()
   const [active, setActive] = useState<(typeof categories)[number]>("All")
 
   const filtered =
@@ -36,12 +37,12 @@ export default function Portfolio() {
           </motion.p>
         </motion.div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-12 max-w-4xl mx-auto">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActive(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 active === cat
                   ? "gradient-bg text-white"
                   : "glass text-text-muted hover:text-text"
@@ -52,10 +53,7 @@ export default function Portfolio() {
           ))}
         </div>
 
-        <motion.div
-          layout
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filtered.map((project) => (
               <motion.div
@@ -65,9 +63,9 @@ export default function Portfolio() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35 }}
-                className="glass card-hover rounded-2xl overflow-hidden group"
+                className="glass card-hover rounded-2xl overflow-hidden group flex flex-col"
               >
-                <div className="relative h-48 gradient-bg opacity-80 flex items-center justify-center overflow-hidden">
+                <div className="relative h-40 gradient-bg opacity-80 flex items-center justify-center overflow-hidden shrink-0">
                   <span className="text-white/90 text-4xl font-bold tracking-tight">
                     {project.title.slice(0, 2).toUpperCase()}
                   </span>
@@ -75,15 +73,17 @@ export default function Portfolio() {
                     {project.category}
                   </div>
                 </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="p-6 flex flex-col flex-1">
+                  <div className="flex items-center justify-between mb-3 gap-2">
                     <h3 className="text-lg font-semibold">{project.title}</h3>
-                    <span className="text-text-muted text-xs">{project.year}</span>
+                    <span className="text-text-muted text-xs whitespace-nowrap">
+                      {project.duration}
+                    </span>
                   </div>
-                  <p className="text-text-muted text-sm leading-relaxed mb-4">
+                  <p className="text-text-muted text-sm leading-relaxed mb-4 flex-1">
                     {project.summary}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
@@ -93,6 +93,20 @@ export default function Portfolio() {
                       </span>
                     ))}
                   </div>
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-secondary hover:text-primary transition-colors mt-auto"
+                    >
+                      {t.portfolio.viewProject}
+                      <Icon
+                        name={isRTL ? "arrow-left" : "arrow-right"}
+                        className="w-4 h-4"
+                      />
+                    </a>
+                  )}
                 </div>
               </motion.div>
             ))}

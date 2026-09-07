@@ -1,5 +1,9 @@
-// NOTE: Replace these placeholder values (email, phone, socials, stats) with
-// AQTech's real details before launch.
+import { projects } from "./projects"
+
+// NOTE: Replace these placeholder values (email, phone, socials, and the
+// non-project stats below) with AQTech's real details before launch. The
+// "Projects Delivered" stat is computed from src/data/projects.ts, so it
+// stays accurate as you add more work.
 export const companyData = {
   name: "AQTech",
   legalName: "AQTech Technologies",
@@ -17,7 +21,7 @@ export const companyData = {
   founded: "2020",
 
   stats: [
-    { value: "80+", label: "Projects Delivered" },
+    { value: `${projects.length}+`, label: "Projects Delivered" },
     { value: "40+", label: "Happy Clients" },
     { value: "12+", label: "Countries Served" },
     { value: "6+", label: "Years of Experience" },
