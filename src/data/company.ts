@@ -1,6 +1,6 @@
 import { projects } from "./projects"
 
-// NOTE: Replace these placeholder values (email, phone, socials, and the
+// NOTE: Replace these placeholder values (url, email, phone, socials, and the
 // non-project stats below) with AQTech's real details before launch. The
 // "Projects Delivered" stat is computed from src/data/projects.ts, so it
 // stays accurate as you add more work.
@@ -10,6 +10,9 @@ export const companyData = {
   tagline: "Engineering Technology That Moves Business Forward",
   shortDescription:
     "AQTech is a technology partner that designs, builds, and scales web, mobile, and AI-powered products for ambitious businesses.",
+  // TODO: swap for the real production domain before launch — layout.tsx,
+  // robots.ts, and sitemap.ts all read from this single source of truth.
+  url: "https://aqtech.example.com",
   email: "info@aqtech.com",
   phone: "+20 100 000 0000",
   location: "Cairo, Egypt",

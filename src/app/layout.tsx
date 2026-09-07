@@ -3,6 +3,7 @@ import { Inter, Manrope, Cairo } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "@/context/LanguageContext"
 import { Analytics } from "@vercel/analytics/next"
+import { companyData } from "@/data/company"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,7 +20,9 @@ const cairo = Cairo({
   subsets: ["arabic", "latin"],
 })
 
-const siteUrl = "https://aqtech.example.com"
+// TODO: companyData.url is a placeholder — replace it with the real
+// production domain before launch (see src/data/company.ts).
+const siteUrl = companyData.url
 
 export const viewport: Viewport = {
   themeColor: "#05070d",
@@ -63,6 +66,8 @@ export const metadata: Metadata = {
     description:
       "We design and engineer web, mobile, and AI-powered products for ambitious companies.",
     siteName: "AQTech",
+    locale: "en_US",
+    alternateLocale: ["ar_SA"],
   },
   twitter: {
     card: "summary_large_image",
@@ -73,7 +78,35 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+}
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: companyData.name,
+  legalName: companyData.legalName,
+  url: siteUrl,
+  logo: `${siteUrl}/icon.png`,
+  description: companyData.shortDescription,
+  foundingDate: companyData.founded,
+  email: companyData.email,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: companyData.location,
+  },
+  sameAs: [
+    companyData.linkedin,
+    companyData.twitter,
+    companyData.github,
+    companyData.instagram,
+  ],
 }
 
 export default function RootLayout({
@@ -85,6 +118,11 @@ export default function RootLayout({
       className={`${inter.variable} ${manrope.variable} ${cairo.variable}`}
     >
       <body className="antialiased min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <LanguageProvider>{children}</LanguageProvider>
         <Analytics />
       </body>
