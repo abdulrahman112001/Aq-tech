@@ -120,7 +120,6 @@ export default function RootLayout({
       <body className="antialiased min-h-screen flex flex-col">
         <script
           type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <LanguageProvider>{children}</LanguageProvider>
