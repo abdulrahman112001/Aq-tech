@@ -60,3 +60,4 @@ Colors, fonts, and reusable utility classes (`.glass`, `.gradient-text`,
 `.gradient-bg`, `.card-hover`, `.section-eyebrow`, `.grid-pattern`) live
 in `src/app/globals.css`. Headings use Manrope (Cairo in Arabic), body
 text uses Inter.
+# Aq-tech
