@@ -3,11 +3,51 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useLanguage } from "@/context/LanguageContext"
-import { projects, projectCategories } from "@/data/projects"
+import {
+  projects,
+  projectCategories,
+  getCategoryLabel,
+  type Project,
+} from "@/data/projects"
 import { fadeInUp, staggerContainer, viewportOnce } from "./animations"
 import Icon from "./Icon"
 
 const categories = ["All", ...projectCategories]
+
+function ProjectThumb({
+  project,
+  categoryLabel,
+}: {
+  project: Project
+  categoryLabel: string
+}) {
+  const [imgError, setImgError] = useState(false)
+  const showImage = Boolean(project.link) && !imgError
+
+  return (
+    <div className="relative h-40 overflow-hidden shrink-0 bg-surface-light">
+      {showImage ? (
+        <img
+          src={`/projects/${project.slug}.jpg`}
+          alt={project.title}
+          loading="lazy"
+          onError={() => setImgError(true)}
+          className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+        />
+      ) : (
+        <div className="absolute inset-0 gradient-bg opacity-80 flex items-center justify-center">
+          <span className="text-white/90 text-4xl font-bold tracking-tight">
+            {project.title.slice(0, 2).toUpperCase()}
+          </span>
+        </div>
+      )}
+      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/5 to-transparent" />
+      <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/40 text-white text-xs font-medium backdrop-blur-sm">
+        {categoryLabel}
+      </div>
+    </div>
+  )
+}
 
 export default function Portfolio() {
   const { t, isRTL } = useLanguage()
@@ -48,7 +88,7 @@ export default function Portfolio() {
                   : "glass text-text-muted hover:text-text"
               }`}
             >
-              {cat === "All" ? t.portfolio.all : cat}
+              {cat === "All" ? t.portfolio.all : getCategoryLabel(cat, isRTL)}
             </button>
           ))}
         </div>
@@ -65,14 +105,10 @@ export default function Portfolio() {
                 transition={{ duration: 0.35 }}
                 className="glass card-hover rounded-2xl overflow-hidden group flex flex-col"
               >
-                <div className="relative h-40 gradient-bg opacity-80 flex items-center justify-center overflow-hidden shrink-0">
-                  <span className="text-white/90 text-4xl font-bold tracking-tight">
-                    {project.title.slice(0, 2).toUpperCase()}
-                  </span>
-                  <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/30 text-white text-xs font-medium backdrop-blur-sm">
-                    {project.category}
-                  </div>
-                </div>
+                <ProjectThumb
+                  project={project}
+                  categoryLabel={getCategoryLabel(project.category, isRTL)}
+                />
                 <div className="p-6 flex flex-col flex-1">
                   <div className="flex items-center justify-between mb-3 gap-2">
                     <h3 className="text-lg font-semibold">{project.title}</h3>
@@ -81,7 +117,7 @@ export default function Portfolio() {
                     </span>
                   </div>
                   <p className="text-text-muted text-sm leading-relaxed mb-4 flex-1">
-                    {project.summary}
+                    {isRTL ? project.summaryAr : project.summary}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.slice(0, 3).map((tag) => (
